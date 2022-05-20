@@ -121,7 +121,7 @@
 .form-group {
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    justify-content: space-between;
     margin-bottom: 20px;
     margin-top: 40px;
 }
@@ -181,6 +181,9 @@
     padding: 6px 12px;
     border: 1px solid #ccc;
     border-top: none;
+    width: 70%;
+    margin: 0 auto;
+    border: none;
 }
 
 .submitbtn {
