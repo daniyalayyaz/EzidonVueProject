@@ -104,6 +104,9 @@
             <input type="checkbox" class="form-check-input" v-model="formData.terms">
             <label class="form-check-label">I ACCEPT TERMS AND CONDITIONS</label>
         </div>
+        <div class="btndiv">
+        <button class="submitbtn">Submit Details</button>
+        </div>
     </div>
 </template>
 <style>
@@ -178,6 +181,19 @@
     padding: 6px 12px;
     border: 1px solid #ccc;
     border-top: none;
+}
+
+.submitbtn {
+    margin: 0 auto !important;
+    width: 50%;
+    border-radius: 20px;
+    background-color: #f4841f;
+    color: white;
+    height: 30px;
+}
+.btndiv{
+    text-align: center;
+    margin-bottom: 30px;
 }
 </style>
 <script>
