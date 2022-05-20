@@ -100,12 +100,12 @@
             <label class="filelabels">Commercial Registeration</label>
             <input type="file" @change="uploadFile" ref="file" class="fileinput">
         </div>
-        <div class="form-group form-check">
+        <div class="form-group-terms form-check">
             <input type="checkbox" class="form-check-input" v-model="formData.terms">
             <label class="form-check-label">I ACCEPT TERMS AND CONDITIONS</label>
         </div>
         <div class="btndiv">
-        <button class="submitbtn">Submit Details</button>
+            <button class="submitbtn">Submit Details</button>
         </div>
     </div>
 </template>
@@ -124,6 +124,13 @@
     justify-content: space-between;
     margin-bottom: 20px;
     margin-top: 40px;
+}
+
+.form-group-terms {
+    margin-bottom: 20px;
+    margin-top: 40px;
+    text-align: center;
+    font-weight: bold;
 }
 
 .form-check-input {
@@ -194,7 +201,8 @@
     color: white;
     height: 30px;
 }
-.btndiv{
+
+.btndiv {
     text-align: center;
     margin-bottom: 30px;
 }
