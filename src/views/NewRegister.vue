@@ -1,10 +1,24 @@
 
 <template>
     <div class="tab">
+        <button class="tablinks" @click="openForm(event, 'ChooseRole')">Choose Role</button>
         <button class="tablinks" @click="openForm(event, 'PersonalInformation')">Personal Information</button>
+        <button class="tablinks" @click="openForm(event, 'OTPVerify')">OTP Verification</button>
         <button class="tablinks" @click="openForm(event, 'ServiceInformation')">Service Information</button>
         <button class="tablinks" @click="openForm(event, 'BankAccountDetails')">Bank Account Details</button>
         <button class="tablinks" @click="openForm(event, 'UploadDocuments')">Upload Documents</button>
+    </div>
+    <div id="ChooseRole" class="tabcontent">
+        <div class="pickedrole">Picked: {{ formData.formrole }}</div>
+        <div class="roles">
+            <input type="radio" id="one" class="rolestyle" value="Freelancers" name="chooserole"
+                v-model="formData.formrole" />
+            <label for="one" class="rolelabels">Freelancers</label>
+
+            <input type="radio" id="two" value="Business" class="rolestyle" name="chooserole"
+                v-model="formData.formrole" />
+            <label for="two" class="rolelabels">Business</label>
+        </div>
     </div>
     <div id="PersonalInformation" class="tabcontent">
         <div class="form-group">
@@ -28,34 +42,47 @@
             <label for="idNumber" class="labels">ID Number</label>
             <input type="number" class="form-control" placeholder="Enter ID Number" v-model="formData.idnumber">
         </div>
-        <div class="form-group">
+        <div class="form-group" v-if="formData.formrole === 'Business'">
             <label for="companyName" class="labels">Company Name</label>
             <input type="text" class="form-control" placeholder="Enter Company Name" v-model="formData.companyname">
         </div>
-        <div class="form-group">
+        <div class="form-group" v-if="formData.formrole === 'Business'">
             <label for="companyName" class="labels">Commercial Registration Number</label>
             <input type="number" class="form-control" placeholder="Enter Commercial Registration Number"
                 v-model="formData.commercialregnumber">
+        </div>
+    </div>
+    <div id="OTPVerify" class="tabcontent">
+        <div class="Otpdiv">
+            <label class="Otp">Under Maintainence</label>
         </div>
     </div>
     <div id="ServiceInformation" class="tabcontent">
         <div class="form-group">
             <label for="serviceCategory" class="labels">Service Category</label>
             <select class="form-control" v-model="formData.servicecategory">
-                <option selected>Cleaning Services</option>
+                <option value="opt1">Cleaning Services</option>
                 <option>Furniture & Decor</option>
                 <option>Maintainence Services</option>
-                <option>Other</option>
+                <option value="Other">Other</option>
             </select>
+        </div>
+        <div class="form-group" v-if="formData.servicecategory === 'Other'">
+            <label for="servicecategory" class="labels">Enter Custom Service Category</label>
+            <input type="text" class="form-control" placeholder="Start Writing Here..">
         </div>
         <div class="form-group">
             <label for="servicetoprovide" class="labels">Service to provide</label>
             <select class="form-control" v-model="formData.servicetoprovide">
-                <option>Cleaning Services</option>
-                <option selected>Furniture & Decor</option>
+                <option value="opt1">Cleaning Services</option>
+                <option>Furniture & Decor</option>
                 <option>Maintainence Services</option>
-                <option>Other</option>
+                <option value="Other">Other</option>
             </select>
+        </div>
+        <div class="form-group" v-if="formData.servicetoprovide === 'Other'">
+            <label for="servicecategory" class="labels">Enter Custom Service to provide</label>
+            <input type="text" class="form-control" placeholder="Start Writing Here..">
         </div>
         <div class="form-group">
             <label for="companyName" class="labels">Service Price</label>
@@ -72,12 +99,16 @@
             <input type="text" class="form-control" placeholder="Enter Bank Name" v-model="formData.bankname">
         </div>
         <div class="form-group">
-            <label for="accholderName" class="labels">Account Holder Name</label>
-            <input type="text" class="form-control" placeholder="Enter Account Holder Name"
-                v-model="formData.accholdername">
+            <label for="accholderName" class="labels" v-if="formData.formrole === 'Freelancers'">Account Holder
+                Name</label>
+            <label for="accholderName" class="labels" v-else>Company Account Name</label>
+            <input type="text" class="form-control" placeholder="Enter Account Name" v-model="formData.accholdername">
         </div>
         <div class="form-group">
-            <label for="bankaccnumber" class="labels">Bank Account Number</label>
+            <label for="bankaccnumber" class="labels" v-if="formData.formrole === 'Freelancers'">Bank Account
+                Number</label>
+            <label for="accholderName" class="labels" v-else>Company Bank Account Number</label>
+
             <input type="number" class="form-control" placeholder="Enter Bank Account Number"
                 v-model="formData.bankaccnumber">
         </div>
@@ -96,7 +127,7 @@
             <label class="filelabels">Stamped Personal Bank Account</label>
             <input type="file" @change="uploadFile" ref="file" class="fileinput">
         </div>
-        <div class="form-group">
+        <div class="form-group" v-if="formData.formrole === 'Business'">
             <label class="filelabels">Commercial Registeration</label>
             <input type="file" @change="uploadFile" ref="file" class="fileinput">
         </div>
@@ -105,7 +136,7 @@
             <label class="form-check-label">I ACCEPT TERMS AND CONDITIONS</label>
         </div>
         <div class="btndiv">
-            <button class="submitbtn">Submit Details</button>
+            <button class="submitbtn" :disabled="!formData.terms">Submit Details</button>
         </div>
     </div>
 </template>
@@ -166,7 +197,7 @@
     cursor: pointer;
     padding: 14px 16px;
     transition: 0.3s;
-    width: 25%;
+    width: 16.6%;
     color: white;
     font-weight: bold;
     border-right: 2px solid white;
@@ -202,9 +233,53 @@
     height: 30px;
 }
 
+.submitbtn:disabled {
+    cursor: not-allowed;
+    opacity: 0.8;
+}
+
 .btndiv {
     text-align: center;
     margin-bottom: 30px;
+}
+
+.pickedrole {
+    font-weight: bold;
+    text-align: center;
+    margin-top: 100px;
+    font-size: 50px;
+    margin-bottom: 25px
+}
+
+.roles {
+    text-align: center;
+    margin-bottom: 100px
+}
+
+.rolelabels {
+    font-weight: bold;
+    font-size: 25px;
+    color: #f4841f;
+    margin-right: 20px;
+    margin-left: 20px;
+}
+
+.rolestyle {
+    color: #f4841f !important;
+    height: 25px !important;
+    width: 25px !important
+}
+
+.Otp {
+    font-weight: bold;
+    font-size: 50px;
+    color: #f4841f
+}
+
+.Otpdiv {
+    text-align: center;
+    margin-top: 100px;
+    margin-bottom: 100px;
 }
 </style>
 <script>
@@ -213,6 +288,7 @@
 // import { required } from "vuelidate/lib/validators";
 // import { email } from "vuelidate/lib/validators";
 // import { numeric } from "vuelidate/lib/validators";
+import { reactive } from 'vue'
 
 export default {
     name: "StepFormValidation",
@@ -222,6 +298,7 @@ export default {
     data() {
         return {
             formData: {
+                formrole: "",
                 fullName: "",
                 email: null,
                 phonenumber: null,
@@ -229,14 +306,14 @@ export default {
                 idnumber: null,
                 companyname: null,
                 commercialregnumber: null,
-                servicecategory: null,
-                servicetoprovide: null,
+                servicecategory: 'opt1',
+                servicetoprovide: 'opt1',
                 serviceprice: null,
                 bankname: null,
                 accholdername: "",
                 bankaccnumber: null,
                 Iban: null,
-                terms: false
+                terms: false,
             },
             //   validationRules: [
             //     { fullName: { required }, email: { required, email } },
